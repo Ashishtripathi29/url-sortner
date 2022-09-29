@@ -1,17 +1,15 @@
 const express=require('express')
 const router=express.Router()
+const urlController =require("../controller/urlController")
 
-router.get("/demo/:name",function(req,res){
-    const a=req.params.name
-    console.log(a)
-    res.send("done")
-})
+router.post('/shorten',urlController.createUrl)
+router.get('/:shorten',urlController.geturl)
 
 
 
-
-
-
+router.all("/*", function (req, res) {
+    res.status(400).send("Invalid request....!!!");
+  });
 
 
 
