@@ -9,11 +9,11 @@ const { promisify } = require("util");
 
 
 const redisClient = redis.createClient(
-  16486,
-  "redis-16486.c264.ap-south-1-1.ec2.cloud.redislabs.com",
+  10549,
+  "redis-10549.c258.us-east-1-4.ec2.cloud.redislabs.com",
   { no_ready_check: true }
 );
-redisClient.auth("7KmX5PeuHD2dhmhOW8Ey83vHqsua6rOy", function (err) {
+redisClient.auth("u87uciXYX1Y65ptzYhIrCswD8NTGNvw4", function (err) {
   if (err) throw err;
 });
 
@@ -26,13 +26,14 @@ const get = promisify(redisClient.GET).bind(redisClient)
 
 module.exports ={
  createUrl : async function (req, res) {
+  try{
     const longUrl = req.body.longUrl;
     const baseUrl = process.env.baseUrl;
   
     if (!longUrl)
       return res.status(400).send({ status: false, msg: "please provide url." });
   
-    if (!validUrl.isUri(longUrl))
+    if (!validUrl.isWebUri(longUrl))
       return res.status(400).send({ status: false, msg: "please provide valid url." });
   
         const checkUrl = await urlModel.findOne({longUrl : longUrl})
@@ -43,18 +44,24 @@ module.exports ={
   
     const url = { longUrl: longUrl, urlCode: urlCode, shortUrl: shortUrl }; 
     const createUrlData= await urlModel.create(url)
+   
+    return res.status(201).send({ status: true, data : createUrlData });}
+     catch (err) {
+      console.error(err);
+      res.status(500).send({status:false, msg:err.message});
+    }
+},
   
-    return res.status(201).send({ status: true, data : createUrlData });
-  },
 
 
  geturl : async (req, res) => {
     try {
       let geturldata = await get(`${req.params.urlCode}`)
-
+      
       if(geturldata) return res.status(302).redirect(geturldata);
       else{
         const url = await urlModel.findOne({ urlCode: req.params.urlCode });
+        
       if (url) {
         await  set(`${req.params.urlCode}`,(url.longUrl))                     
         return res.status(302).redirect(url.longUrl);
