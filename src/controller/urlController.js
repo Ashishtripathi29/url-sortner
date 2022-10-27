@@ -2,18 +2,18 @@ const mongoose = require("mongoose");
 const urlModel = require("../models/urlModel");
 const validUrl = require('valid-url');
 const shortid = require('shortid');
-require('dotenv').config()
+require('dotenv')
 const redis = require("redis")
 const { promisify } = require("util");
 //redis connection
 
 
 const redisClient = redis.createClient(
-  10549,
-  "redis-10549.c258.us-east-1-4.ec2.cloud.redislabs.com",
+  18191,
+  "redis-18191.c301.ap-south-1-1.ec2.cloud.redislabs.com",
   { no_ready_check: true }
 );
-redisClient.auth("u87uciXYX1Y65ptzYhIrCswD8NTGNvw4", function (err) {
+redisClient.auth("pyXsGZIaAuIJu5acS4q6pAEwgHIyfnfC", function (err) {
   if (err) throw err;
 });
 

@@ -24,3 +24,4 @@ const usrModel = new mongoose.Schema(
 )
 
 module.exports = mongoose.model("url", usrModel)
+
